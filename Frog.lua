@@ -5,7 +5,7 @@ local Queue = require "Libs.Queue"
 
 local Frog = Class()
 
-function Frog:init(pos, scale)
+function Frog:init(pos, size, scale)
     self.actions = Queue.new()
 
     self.renderer = SpriteRenderer({
@@ -21,23 +21,23 @@ function Frog:init(pos, scale)
     self.directions = {
         right = love.math.newBezierCurve({
             0, 0,
-            16, -15,
-            32, 0
+            size.x / 2, -size.y,
+            size.x, 0
         }),
         left = love.math.newBezierCurve({
             0, 0,
-            -16, -15,
-            -32, 0
+            -(size.x / 2), -size.y,
+            -size.x, 0
         }),
         up = love.math.newBezierCurve({
             0, 0,
-            0, -30,
-            0, -15
+            0, -(size.y * 2),
+            0, -size.y
         }),
         down = love.math.newBezierCurve({
             0, 0,
-            0, -15,
-            0, 15
+            0, -size.y,
+            0, size.y
         })
     }
 

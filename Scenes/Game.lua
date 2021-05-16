@@ -10,17 +10,17 @@ local Compiler = require "Compiler"
 
 local Level1 = require "Levels.Level1"
 
-local WaterLily = SpriteRenderer({
-    image = "Assets/WaterLily.png",
-    width = 32,
-    height = 15
-}, nil, nil, nil, 5)
+local tilesheet = SpriteRenderer({
+    image = "Assets/Tilesheet.png",
+    width = 36,
+    height = 36
+}, nil, Vector(0, 20), nil, 5)
 
-local tilemap = Tilemap(WaterLily)
+local tilemap = Tilemap(tilesheet, Vector(32, 16), Vector(3, 3))
 
-local frog = Frog(Vector(700, 250 + 15 * 5), 5)
+local frog = Frog(Vector(700, 250 + 15 * 5), Vector(32 + 3, 16 + 3), 5)
 
-local font = love.graphics.newFont("Assets/Fonts/PressStart2P.ttf")
+local font = love.graphics.newFont("Assets/Fonts/PressStart2P.ttf", 14)
 
 love.graphics.setFont(font)
 
@@ -71,6 +71,7 @@ panel:generate()
 function love.draw()
     tilemap:draw(Level1.map, Vector(700, 250))
     frog:draw()
+    tilemap:draw(Level1.decor, Vector(700, 250))
     textbox:draw()
     panel:draw()
 end
