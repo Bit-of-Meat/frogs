@@ -1,4 +1,4 @@
-Class = require "Engine.Class"
+Class = require "Libs.Class"
 
 Animation = Class()
 

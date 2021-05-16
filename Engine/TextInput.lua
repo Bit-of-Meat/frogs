@@ -1,5 +1,5 @@
 local utf8 = require "utf8"
-local Class = require "Engine.Class"
+local Class = require "Libs.Class"
 local Vector = require "Engine.Vector"
 
 function utf8.sub(str, x, y)

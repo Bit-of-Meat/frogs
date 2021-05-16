@@ -1,7 +1,7 @@
 local SpriteRenderer = require "Engine.SpriteRenderer"
 local Vector = require "Engine.Vector"
-local Class = require "Engine.Class"
-local Queue = require "Queue"
+local Class = require "Libs.Class"
+local Queue = require "Libs.Queue"
 
 local Frog = Class()
 

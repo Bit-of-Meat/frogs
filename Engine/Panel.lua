@@ -1,4 +1,4 @@
-local Class = require "Engine.Class"
+local Class = require "Libs.Class"
 
 local Panel = Class()
 

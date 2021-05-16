@@ -3,9 +3,9 @@ local Tilemap = require "Engine.Tilemap"
 local SpriteRenderer = require "Engine.SpriteRenderer"
 local Vector = require "Engine.Vector"
 
-local Panel = require "Panel"
+local Panel = require "Engine.Panel"
 
-local TextInput = require "TextInput"
+local TextInput = require "Engine.TextInput"
 local Compiler = require "Compiler"
 
 local Level1 = require "Levels.Level1"
