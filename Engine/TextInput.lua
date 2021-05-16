@@ -74,8 +74,6 @@ function TextInput:draw()
 
 	_, wt = font:getWrap(self.text, self.wrap)
 
-	print(wt[#wt])
-
 	if wt[#wt] then
 		lines = #wt - 1
 	else

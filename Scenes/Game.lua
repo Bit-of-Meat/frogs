@@ -18,7 +18,7 @@ local tilesheet = SpriteRenderer({
 
 local tilemap = Tilemap(tilesheet, Vector(32, 16), Vector(3, 3))
 
-local frog = Frog(Vector(700, 250 + 15 * 5), Vector(32 + 3, 16 + 3), 5)
+local frog = Frog(Vector(700, 250 + 15 * 5), Vector(32 + 3, 16 + 3), 5, Level1.map)
 
 local font = love.graphics.newFont("Assets/Fonts/PressStart2P.ttf", 14)
 

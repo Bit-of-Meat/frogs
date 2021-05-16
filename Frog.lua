@@ -2,11 +2,13 @@ local SpriteRenderer = require "Engine.SpriteRenderer"
 local Vector = require "Engine.Vector"
 local Class = require "Libs.Class"
 local Queue = require "Libs.Queue"
+local SceneManager = require "Engine.SceneManager"
 
 local Frog = Class()
 
-function Frog:init(pos, size, scale)
+function Frog:init(pos, size, scale, map)
     self.actions = Queue.new()
+    self.map = map
 
     self.renderer = SpriteRenderer({
         image = "Assets/Frog.png",
@@ -41,6 +43,15 @@ function Frog:init(pos, size, scale)
         })
     }
 
+    self.pos = {
+        right = Vector(1, 0),
+        left = Vector(-1, 0),
+        up = Vector(0, -1),
+        down = Vector(0, 1)
+    }
+
+    self.gridPos = Vector(1, 1)
+
     for _, dir in pairs(self.directions) do
         dir:scale(scale)
     end
@@ -56,10 +67,33 @@ function Frog:update(dt)
     end
 
     if not self.renderer.currentAnimation and self.directions[self.direction] then
+        if self.direction == "left" then
+            self.renderer.flipX = true
+        elseif self.direction == "right" then
+            self.renderer.flipX = false
+        end
+        
         self.renderer:playAnimation("Jump", function ()
             self.renderer.currentAnimation = nil
             self.position = self.position + Vector(self.directions[self.direction]:evaluate(1))
+            self.gridPos = self.gridPos + self.pos[self.direction]
             self.direction = nil
+
+            ok = false
+
+            if self.gridPos.y > 0 and self.gridPos.y <= #self.map then
+                if self.gridPos.x > 0 and self.gridPos.x <= #self.map[self.gridPos.y] then
+                    if self.map[self.gridPos.y][self.gridPos.x] == 1 then
+                        ok = true
+                    end
+                end
+            end
+
+            if not ok then
+                self.renderer:playAnimation("Dies", function()
+                    SceneManager.load("Scenes/Game")
+                end)
+            end
         end)
     end
 
