@@ -21,7 +21,11 @@ function SpriteRenderer:init(imageData, position, pivot, rotation, scale)
     self.pivot = pivot or Vector()
 
     self.rotation = rotation or 0
-    self.scale = scale or 1
+
+    self.scale = type(scale) == "number" and Vector(scale, scale) or (scale or Vector())
+
+    self.flipX = false
+    self.flipY = false
 
     self.animations = {}
 end
@@ -58,6 +62,9 @@ function SpriteRenderer:update(dt)
 end
 
 function SpriteRenderer:draw(spriteNumber, x, y)
+    scaleX = self.flipX and -self.scale.x or self.scale.x
+    scaleY = self.flipY and -self.scale.y or self.scale.y
+
     if self.currentAnimation then
         spriteNumber = self.currentAnimation:getFrame()
     end
@@ -65,16 +72,16 @@ function SpriteRenderer:draw(spriteNumber, x, y)
     if self.sprites then
         love.graphics.draw(
             self.texture, self.sprites[spriteNumber or 1],
-            (x or self.position.x) - (self.width * self.scale / 2) + self.pivot.x,
-            (y or self.position.y) - (self.height * self.scale / 2) + self.pivot.y,
-            self.rotation, self.scale
+            (x or self.position.x) - (self.width * scaleX / 2) + self.pivot.x,
+            (y or self.position.y) - (self.height * scaleY / 2) + self.pivot.y,
+            self.rotation, scaleX, scaleY
         )
     else
         love.graphics.draw(
             self.texture,
-            (x or self.position.x) - (self.width * self.scale / 2) + self.pivot.x,
-            (y or self.position.y) - (self.height * self.scale / 2) + self.pivot.y,
-            self.rotation, self.scale
+            (x or self.position.x) - (self.width * scaleX / 2) + self.pivot.x,
+            (y or self.position.y) - (self.height * scaleY / 2) + self.pivot.y,
+            self.rotation, scaleX, scaleY
         )
     end
 end
