@@ -8,7 +8,19 @@ local Panel = require "Engine.Panel"
 local TextInput = require "Engine.TextInput"
 local Compiler = require "Compiler"
 
-local Level1 = require "Levels.Level1"
+require "Libs.tableUtil"
+
+chunk = love.filesystem.load("save.lua")
+
+if chunk then
+    chunk()
+else
+    save = {
+        level = 1
+    }
+end
+
+local Level = require("Levels.Level" .. save.level)
 
 local tilesheet = SpriteRenderer({
     image = "Assets/Tilesheet.png",
@@ -18,7 +30,7 @@ local tilesheet = SpriteRenderer({
 
 local tilemap = Tilemap(tilesheet, Vector(32, 16), Vector(3, 3))
 
-local frog = Frog(Vector(700, 250 + 15 * 5), Vector(32 + 3, 16 + 3), 5, Level1.map)
+local frog = Frog(Vector(600, 200 + 15 * 5), Vector(32 + 3, 16 + 3), 5, Level.map)
 
 local font = love.graphics.newFont("Assets/Fonts/PressStart2P.ttf", 14)
 
@@ -26,7 +38,7 @@ love.graphics.setFont(font)
 
 love.keyboard.setKeyRepeat(true)
 
-textbox = TextInput(Vector(5 * 3, 5 * 3), 6 * 20 * 3)
+textbox = TextInput(Vector(5 * 3, (16 * 10) + (5 * 3)), 6 * 20 * 3)
 
 function love.update(dt)
     frog:update(dt)
@@ -59,19 +71,29 @@ function love.keypressed(key)
     textbox:keypressed(key)
 end
 
+local task = Panel("Assets/btn.png", {
+    right = 5,
+    left = 5,
+    top = 5,
+    down = 5
+}, Vector(20, 5))
+
 local panel = Panel("Assets/btn.png", {
     right = 5,
     left = 5,
     top = 5,
     down = 5
-}, Vector(20, 30))
+}, Vector(20, 20))
 
+task:generate()
 panel:generate()
 
 function love.draw()
-    tilemap:draw(Level1.map, Vector(700, 250))
+    task:draw(Vector(0, 0), 0, Vector(3, 3))
+    tilemap:draw(Level.map, Vector(600, 200))
     frog:draw()
-    tilemap:draw(Level1.decor, Vector(700, 250))
+    tilemap:draw(Level.decor, Vector(600, 200))
+    panel:draw(Vector(0, 16 * 10), 0, Vector(3, 3))
     textbox:draw()
-    panel:draw()
+    love.graphics.printf(Level.description, 5 * 3, 5 * 3, 6 * 20 * 3)
 end

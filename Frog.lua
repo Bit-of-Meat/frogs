@@ -4,6 +4,8 @@ local Class = require "Libs.Class"
 local Queue = require "Libs.Queue"
 local SceneManager = require "Engine.SceneManager"
 
+require "Libs.tableUtil"
+
 local Frog = Class()
 
 function Frog:init(pos, size, scale, map)
@@ -79,20 +81,39 @@ function Frog:update(dt)
             self.gridPos = self.gridPos + self.pos[self.direction]
             self.direction = nil
 
-            ok = false
+            res = "err"
 
             if self.gridPos.y > 0 and self.gridPos.y <= #self.map then
                 if self.gridPos.x > 0 and self.gridPos.x <= #self.map[self.gridPos.y] then
                     if self.map[self.gridPos.y][self.gridPos.x] == 1 then
-                        ok = true
+                        res = "tile"
+                    elseif self.map[self.gridPos.y][self.gridPos.x] == 2 then
+                        res = "level"
                     end
                 end
             end
 
-            if not ok then
+            if res == "err" then
+                self.actions = Queue.new()
+                self.direction = nil
                 self.renderer:playAnimation("Dies", function()
                     SceneManager.load("Scenes/Game")
                 end)
+            elseif res == "level" then
+                chunk = love.filesystem.load("save.lua")
+
+                if chunk then
+                    chunk()
+                else
+                    save = {
+                        level = 1
+                    }
+                end
+
+                save.level = save.level + 1
+
+                success = love.filesystem.write("save.lua", table.show(save, "save"))
+                SceneManager.load("Scenes/Game")
             end
         end)
     end

@@ -8,9 +8,11 @@ end
 
 function Compiler:run(code)
     local cmd = loadstring(code or "")
-    setfenv(cmd, self.env)
+    if cmd then
+        setfenv(cmd, self.env)
 
-    cmd()
+        cmd()
+    end
 end
 
 return Compiler

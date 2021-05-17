@@ -68,6 +68,12 @@ function Panel:generate()
     self.image:getDimensions()
   )
 
+  c = love.graphics.newQuad(
+    self.border.left, self.border.top,
+    self.width - self.border.right - self.border.left, self.height - self.border.down - self.border.top,
+    self.image:getDimensions()
+  )
+
   self.batch:add(tl, 0, 0)
   self.batch:add(tr, 11 + (6 * self.size.x), 0)
   self.batch:add(dl, 0, 11 + (6 * self.size.y))
@@ -83,11 +89,22 @@ function Panel:generate()
     self.batch:add(cdr, 11 + (6 * self.size.x), 5 + (y * 6))
   end
 
+  _, _, w, h = c:getViewport()
+
+  for y = 0, self.size.y do
+    for x = 0, self.size.x do
+      self.batch:add(c, self.border.left + (x * w), self.border.top + (y * h))
+    end
+  end
+
   self.batch:flush()
 end
 
-function Panel:draw()
-  love.graphics.draw(self.batch, 0, 0, 0, 3)
+function Panel:draw(pos, rot, s)
+  position = pos or Vector()
+  rotation = rot or 0
+  scale = s or Vector(1, 1)
+  love.graphics.draw(self.batch, position.x, position.y, rotation, scale.x, scale.y)
 end
 
 return Panel
