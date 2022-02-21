@@ -20,7 +20,22 @@ else
     }
 end
 
-local Level = require("Levels.Level" .. save.level)
+local levelsFolder = "Levels"
+local dirItems = love.filesystem.getDirectoryItems(levelsFolder)
+
+local levelsCount = 0;
+
+for _, dirItem in ipairs(dirItems) do
+    if love.filesystem.getInfo(levelsFolder .. "/" .. dirItem).type == "file" then
+        levelsCount = levelsCount + 1;
+    end
+end
+
+if levelsCount < save.level then
+    SceneManager.load("Scenes/End")
+end
+
+local Level = require(levelsFolder .. ".Level" .. save.level)
 
 local tilesheet = SpriteRenderer({
     image = "Assets/Tilesheet.png",
